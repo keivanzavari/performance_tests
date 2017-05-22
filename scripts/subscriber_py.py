@@ -9,12 +9,29 @@ from timeit import default_timer as timer
 import numpy as np
 from performance_tests.msg import SuperAwesome
 
+
+# ----------------
+
+COUNTER_MAX = 5000
+
 # ----------------
 elapsed_time = []
 t2  = timer()
 
 counter_  = 0
-COUNTER_MAX = 5
+
+save_to_file_ = True
+caller_id = 'py'
+# ----------------
+
+def saveToFile(list_to_save):
+    file_name = 'subscriber_py_from_' + caller_id + '_publisher.txt'
+    file = open(file_name, 'w')
+    for item in list_to_save:
+        file.write("%s\n" % item)
+
+
+
 # ----------------
 
 def elapsedTime(counter):
@@ -28,22 +45,46 @@ def elapsedTime(counter):
         t2 = timer()
         return elapsed
 
-def callback(data):
-    # make sure incoming message is not empty 
+
+# ----------------
+def measurePerformance():
+
     global counter_, COUNTER_MAX, elapsed_time
 
+    if (counter_ <= COUNTER_MAX):
+        elapsed_time.append(elapsedTime(counter_))
+        counter_+=1
+            
+    else:
+        counter_ = 0
+        # elapsed_time.remove(0)
+        print COUNTER_MAX, ' times received messages... ' , np.mean(elapsed_time)
+        if (save_to_file_):
+            saveToFile(elapsed_time)
+        # print(elapsed_time)
+        elapsed_time =[]
+
+# ----------------
+
+def callbackPy(data):
+    # make sure incoming message is not empty 
+    global caller_id
     # if there is data
     if (data.data):
-        if (counter_ <= COUNTER_MAX):
-            elapsed_time.append(elapsedTime(counter_))
-            counter_+=1
-            
-        else:
-            counter_ = 0
-            elapsed_time.remove(0)
-            print '5 times received... ' #, np.mean(elapsed_time)
-            print(elapsed_time)
-            elapsed_time =[]
+        measurePerformance()
+        caller_id = 'py'
+
+# ----------------
+
+def callbackCpp(data):
+    # make sure incoming message is not empty 
+    global caller_id
+    # if there is data
+    if (data.data):
+        measurePerformance(data.data)
+        caller_id = 'cpp'
+
+# ----------------
 
 
 def listen_for_messages():
@@ -54,11 +95,14 @@ def listen_for_messages():
 
 
     # start the subscriber
-    sub_py = rospy.Subscriber(topic_py, SuperAwesome, callback)
-    sub_cpp = rospy.Subscriber(topic_cpp, SuperAwesome, callback)
+    sub_py = rospy.Subscriber(topic_py, SuperAwesome, callbackPy)
+    sub_cpp = rospy.Subscriber(topic_cpp, SuperAwesome, callbackCpp)
 
     # keep python from exiting until this node is stopped 
     rospy.spin()
+
+
+# ----------------
 
 if __name__ == '__main__':
     try:
