@@ -11,31 +11,30 @@ from performance_tests.msg import SuperAwesome
 
 # ----------------
 elapsed_time = []
-timer_prv_  = timer()
+t2  = timer()
 
 counter_  = 0
-
-counter_max_ = 5
+COUNTER_MAX = 5
 # ----------------
 
 def elapsedTime(counter):
-    global timer_prv_
+    global t2
     if (counter==0):
         # this is the first time I am called
-        timer_prv_ = timer()
+        t2 = timer()
         return 0
     else:
-        timer_ = timer() - timer_prv_
-        timer_prv_ = timer()
-        return timer_
+        elapsed = timer() - t2
+        t2 = timer()
+        return elapsed
 
-def callbackPy(data):
+def callback(data):
     # make sure incoming message is not empty 
-    global counter_, counter_max_, elapsed_time
-    # rospy.loginfo(data.data)
+    global counter_, COUNTER_MAX, elapsed_time
+
     # if there is data
     if (data.data):
-        if (counter_ <= counter_max_):
+        if (counter_ <= COUNTER_MAX):
             elapsed_time.append(elapsedTime(counter_))
             counter_+=1
             print(elapsed_time)
@@ -46,10 +45,6 @@ def callbackPy(data):
             elapsed_time =[]
 
 
-
-# def callbackCpp(data):
-#     print data.data
-
 def listen_for_messages():
     # topic name, checked with cv_camera
     topic_py = '/test_msg_py'
@@ -58,8 +53,8 @@ def listen_for_messages():
 
 
     # start the subscriber
-    lis_py = rospy.Subscriber(topic_py, SuperAwesome, callbackPy)
-    # lis_cpp = rospy.Subscriber(topic_py, SuperAwesome, callbackCpp)
+    sub_py = rospy.Subscriber(topic_py, SuperAwesome, callback)
+    sub_cpp = rospy.Subscriber(topic_cpp, SuperAwesome, callback)
 
     # keep python from exiting until this node is stopped 
     rospy.spin()
