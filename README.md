@@ -23,7 +23,10 @@ In total there are four different combinations
 - This comparison provides the loop rate on subscriber side and can be compared to the nominal publishing rate on publisher side
 - In each subscriber, there is a counter to counter the number of calls to the callback function. Once this counter reaches `COUNTER_MAX`, all the recorded loop rates are written to a file in `data_saved/` directory
 - The comparison of these four combinations can be shown by running `scripts/plot_results.py`
-- Three sample results for communication frequencies of `50 Hz`, `1 kHz` and `5 kHz` are placed in `data_saved/`.
+
+###Results
+
+Three sample results for communication frequencies of **50 Hz**, **1 kHz** and **5 kHz** are placed in `data_saved/`.
 
 ## Run
 - Both publisher nodes require a parameter called ``period``. This parameter can be given via rosparam server or via YAML files.
