@@ -32,8 +32,6 @@ void saveToFile(const std::vector<double> & data_to_save){
         output_file << *it << "\n";
     output_file.close();
 
-    // std::ostream_iterator<std::string> output_iterator(output_file, "\n");
-    // std::copy(data_to_save.begin(), data_to_save.end(), output_iterator);
 }
 
 /**
@@ -86,7 +84,6 @@ void callbackPy(const performance_tests::SuperAwesome::ConstPtr & msg)
     // if there is data
     if (!msg->data.empty())
     {
-        //ROS_INFO("I heard: [%s]", msg->data.c_str());
         caller_id_ = "py";
         measurePerformance();
 
@@ -100,7 +97,6 @@ void callbackCpp(const performance_tests::SuperAwesome::ConstPtr & msg)
     // if there is data
     if (!msg->data.empty())
     {
-        //ROS_INFO("I heard: [%s]", msg->data.c_str());
         caller_id_ = "cpp";
         measurePerformance();
 
@@ -112,12 +108,20 @@ void callbackCpp(const performance_tests::SuperAwesome::ConstPtr & msg)
  */
 int main(int argc, char **argv)
 {
-    ros::init(argc, argv, "subscriber_cpp");
+    const char * node_name = "subscriber_cpp";
+    ros::init(argc, argv, node_name);
 
     ros::NodeHandle n;
-    
-    ros::Subscriber sub_py  = n.subscribe("/test_msg_py", 1000, callbackPy);
-    ros::Subscriber sub_cpp = n.subscribe("/test_msg_cpp", 1000, callbackCpp);
+
+    ROS_INFO("Initializing %s node", node_name);
+
+    const char * topic_py  = "/test_msg_py";
+    const char * topic_cpp = "/test_msg_cpp";
+
+    ros::Subscriber sub_py  = n.subscribe(topic_py, 1000, callbackPy);
+    ros::Subscriber sub_cpp = n.subscribe(topic_cpp, 1000, callbackCpp);
+
+    ROS_INFO("listening to two topics %s & %s", topic_py, topic_cpp);
 
     /**
      * ros::spin() will enter a loop, pumping callbacks.  With this version, all

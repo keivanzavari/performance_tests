@@ -7,14 +7,15 @@
 performance_tests::SuperAwesome message;
 // define the publisher
 ros::Publisher pub;
-// = n.advertise<performance_tests::SuperAwesome>("test_msg_cpp", 1);
 // -----------------------------------
 
 
 void callback1(const ros::TimerEvent&)
 {
-    //ROS_INFO("Callback 1 triggered");
-    //message.stamp = ros::Time::now();
+    // we can even add an extra time stamp to the message 
+    // to track the times it takes for its delivery
+    // message.stamp = ros::Time::now();
+
     pub.publish(message);
 
 }
@@ -37,8 +38,9 @@ int main( int argc, char** argv )
         period = 1;
         ROS_INFO("setting period to 1 [sec]");
     } else {
-        ROS_INFO("setting period to");
-        std::cout << period << std::endl;
+
+        ROS_INFO("initialized publisher with period %f [sec] / rate %f [Hz]", period, 1.0/period);
+        
     }
 
     // define parameters
