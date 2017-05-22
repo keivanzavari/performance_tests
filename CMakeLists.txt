@@ -8,7 +8,7 @@ project(performance_tests)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS 
-    message_generation std_msgs roscpp rospy)
+    message_generation std_msgs roscpp rospy roslib)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
