@@ -5,6 +5,7 @@ Author: Keivan Zavari
 """
 
 import rospy
+import rospkg
 from timeit import default_timer as timer
 import numpy as np
 from performance_tests.msg import SuperAwesome
@@ -26,7 +27,14 @@ caller_id_ = 'py'
 
 def saveToFile(list_to_save):
     file_name = 'subscriber_py_from_' + caller_id_ + '_publisher.txt'
-    file = open(file_name, 'w')
+    
+    # get an instance of RosPack with the default search paths
+    rospack = rospkg.RosPack()
+    # get the folder path for the package where the measurement report is
+    folder_name = rospack.get_path('performance_tests')
+
+    file_path = folder_name + '/data_saved/' + file_name
+    file = open(file_path, 'w')
     for item in list_to_save:
         file.write("%s\n" % item)
 
@@ -110,7 +118,7 @@ if __name__ == '__main__':
         # initialise the node
         node_name ='subscriber_py'
         rospy.init_node(node_name, anonymous=True)
-        rospy.loginfo('initialising ' + node_name + ' node')
+        rospy.loginfo('initializing ' + node_name + ' node')
 
 
         listen_for_messages()

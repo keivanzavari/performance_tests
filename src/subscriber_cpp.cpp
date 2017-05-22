@@ -1,6 +1,8 @@
 #include "ros/ros.h"
-#include <performance_tests/SuperAwesome.h>
 #include <sys/time.h>
+#include <ros/package.h>
+
+#include <performance_tests/SuperAwesome.h>
 
 #include <fstream>
 #include <iterator>
@@ -24,10 +26,13 @@ std::string caller_id_ = "py";
  */
 void saveToFile(const std::vector<double> & data_to_save){
     std::string file_name = "subscriber_cpp_from_" + caller_id_ + "_publisher.txt";
-    const char* file_name_ptr = file_name.c_str();
+    std::string folder_name = ros::package::getPath("performance_tests");
+
+    std::string file_path = folder_name + "/data_saved/" + file_name;
+    const char* file_path_ptr = file_path.c_str();
 
     std::ofstream output_file;
-    output_file.open(file_name_ptr);
+    output_file.open(file_path_ptr);
     for (std::vector<double>::const_iterator it = data_to_save.begin() ; it != data_to_save.end(); ++it)
         output_file << *it << "\n";
     output_file.close();
