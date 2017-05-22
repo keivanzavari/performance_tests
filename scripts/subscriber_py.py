@@ -37,11 +37,12 @@ def callback(data):
         if (counter_ <= COUNTER_MAX):
             elapsed_time.append(elapsedTime(counter_))
             counter_+=1
-            print(elapsed_time)
+            
         else:
             counter_ = 0
             elapsed_time.remove(0)
-            print '5 times received, average: ', np.mean(elapsed_time)
+            print '5 times received... ' #, np.mean(elapsed_time)
+            print(elapsed_time)
             elapsed_time =[]
 
 

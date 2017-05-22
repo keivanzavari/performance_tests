@@ -41,14 +41,17 @@ void callback(const performance_tests::SuperAwesome::ConstPtr & msg)
         if (counter_ < COUNTER_MAX)
         {
             elapsed_time.at(counter_) = elapsedTime(counter_);
-            std::cout << elapsed_time[counter_] << std::endl;
             counter_++;
         }
         else 
         {
             counter_ = 0;
             
-            std::cout << "5 times received, average: ";
+            std::cout << "5 times received...\n";
+            for (int i=0; i < COUNTER_MAX; i++) 
+                std::cout << elapsed_time[i] << ", ";
+            std::cout << std::endl;
+
             elapsed_time.assign(COUNTER_MAX,0);
 
         }
