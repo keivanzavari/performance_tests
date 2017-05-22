@@ -10,7 +10,7 @@ This repository provides example files for testing and comparing ROS nodes writt
 - C++ and Python subscriber nodes both listen to both of these topics
 
 
-- In total there are four different combinations
+In total there are four different combinations
 - C++ publisher to Python subscriber
 - C++ publisher to C++ subscriber
 - Python publisher to Python subscriber
