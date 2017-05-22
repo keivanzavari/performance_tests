@@ -3,57 +3,78 @@
 #include <performance_tests/SuperAwesome.h>
 
 
+// -----------------------------------
+performance_tests::SuperAwesome message;
+// define the publisher
+ros::Publisher pub;
+// = n.advertise<performance_tests::SuperAwesome>("test_msg_cpp", 1);
+// -----------------------------------
+
+
+void callback1(const ros::TimerEvent&)
+{
+    //ROS_INFO("Callback 1 triggered");
+    //message.stamp = ros::Time::now();
+    pub.publish(message);
+
+}
+
 int main( int argc, char** argv )
 {
     // initialize the node and define handle
     ros::init(argc, argv, "publisher_cpp");
     ros::NodeHandle n;
 
-    // define parameters
-    double rate;
-    n.getParam("rate",rate);
+    pub = 
+    n.advertise<performance_tests::SuperAwesome>("test_msg_cpp", 1);
+    message.data = "string_message";
+
+    double period;
+    n.getParam("period",period);
 
     // check if block_position_z_ is given
-    if ( !n.getParam("rate",rate)){
-        rate = 5;
-        ROS_INFO("setting rate to 5Hz");
+    if ( !n.getParam("period",period)){
+        period = 1;
+        ROS_INFO("setting period to 1 [sec]");
+    } else {
+        ROS_INFO("setting period to");
+        std::cout << period << std::endl;
     }
-    
-    // set the rate to 5Hz
-    ros::Rate r(rate);
 
-    // define the publisher
-    ros::Publisher marker_pub = 
-        n.advertise<performance_tests::SuperAwesome>("test_msg_cpp", 1);
+    // define parameters
+    bool timer_and_not_rate = false;
+    if (timer_and_not_rate){
+        
+        /**
+        * Timers allow you to get a callback at a specified rate.
+        */
+        ros::Timer timer = n.createTimer(ros::Duration(period), callback1);
+        ros::spin();
 
+    } else {
+        double rate = 1.0/period;
+        ros::Rate r(rate);
 
-    performance_tests::SuperAwesome marker;
-    
-    marker.data = "string_message";
-
-    // Set the scale of the marker -- 1x1x1 here means 1m on a side
-    // position of our cube with respect to the given frame
-    while (ros::ok())
-    {
-        // Set the pose of the marker.  This is a full 6DOF pose relative to the frame/time specified in the header
-        //marker.points.push_back(tmp_p);
-
-        // Publish the marker
-        while (marker_pub.getNumSubscribers() < 1)
+        while (ros::ok())
         {
-          if (!ros::ok())
-          {
-            return 0;
-          }
-          ROS_WARN_ONCE("Please create a subscriber to the marker");
-          sleep(1);
-        }
 
-        marker.stamp = ros::Time::now();
-        marker_pub.publish(marker);
+        // Publish the message
+        while (pub.getNumSubscribers() < 1)
+        {
+            if (!ros::ok())
+            {
+            return 0;
+            }
+            ROS_WARN_ONCE("Please create a subscriber to the message");
+            sleep(1);
+        }
+        pub.publish(message);
 
         r.sleep();
+        }
     }
+
+    return 0;
 
 }
 

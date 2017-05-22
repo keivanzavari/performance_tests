@@ -1,0 +1,12 @@
+<launch>
+
+    <!-- Cheese block -->
+    <param name="period" type="double" value="2.0"/>
+    <rosparam command="load" file="$(find performance_tests)/launch/params.yaml" />
+
+    <node name="performance_tests_pub_cpp" pkg="performance_tests" type="performance_tests_pub_cpp"></node>
+
+    <node name="publisher_py" pkg="performance_tests" type="publisher_py.py"></node>
+
+</launch>
+

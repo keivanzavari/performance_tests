@@ -13,14 +13,17 @@ rate_ = 5
 # ----------------
 
 def publish_msg():
-    topic_name = 'publisher_py'
+    topic_name = 'test_msg_py'
     pub = rospy.Publisher(topic_name, SuperAwesome, queue_size=10)
+    period = rospy.get_param('period', 5.0)
+    rate_ = 1.0/period
     rate = rospy.Rate(rate_) # Hz
     rospy.loginfo('initialised publisher with rate ' + str(rate_) + ' [Hz]')
 
+
     msg = SuperAwesome()
     msg.data = 'test_msg_py'
-    msg.stamp = rospy.get_rostime()
+    # msg.stamp = rospy.get_rostime()
 
     while not rospy.is_shutdown():
         pub.publish(msg)
@@ -33,6 +36,7 @@ if __name__ == '__main__':
         node_name ='publisher_py'
         rospy.init_node(node_name, anonymous=True)
         rospy.loginfo('initialising ' + node_name + ' node')
+
 
 
         publish_msg()
